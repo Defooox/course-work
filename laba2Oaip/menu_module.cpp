@@ -19,7 +19,16 @@ void displayMenu(Stack *stack)
         cout << "6. Удалить файл базы данных" << endl;
         cout << "0. Выход" << endl;
         cout << "Выберите действие: ";
-        cin >> choice;
+
+
+        while (!(cin >> choice))
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Ошибка: введите числовое значение" << endl;
+            cout << "Выберите действие: ";
+        }
+
 
         switch (choice)
         {
@@ -54,8 +63,9 @@ void displayMenu(Stack *stack)
         }
         case 3: {
             if (!isEmpty(stack))
-            {
+            {    
                 cout << "Данные клиентов в табличном формате:" << endl;
+
                 Show(stack);
             }
             else

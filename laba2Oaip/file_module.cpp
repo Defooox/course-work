@@ -1,10 +1,13 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <iostream>
-#include <fstream>
+#define strdup _strdup
+
 #include <cstring>
+#include <fstream>
+#include <iostream>
 
 #include "file_module.h"
+#include <string>
 
 using namespace std;
 
@@ -22,71 +25,56 @@ void remove_DB(const char *filename)
 
 void save_DB(Stack *stack, const char *filename)
 {
-    ofstream outFile(filename);
-    if (!outFile)
+    std::ofstream fout(filename);
+
+    if (!fout.is_open())
     {
-        cerr << "Ошибка открытия файла для записи." << endl;
+        std::cout << "Ошибка открытия файла для записи " << std::endl;
         return;
     }
 
     Node *current = stack->top;
     while (current != nullptr)
     {
-        outFile << "Login: " << current->data->login << endl;
-        outFile << "Password: " << current->data->password << endl;
-        outFile << "Balance: " << current->data->dBalance << endl;
-        outFile << "Email: " << current->data->email << endl;
-        outFile << "Address: " << current->data->address << endl;
-        outFile << "-----------------------" << endl;
+        fout << current->data->login << std::endl;
+        fout << current->data->password << std::endl;
+        fout << current->data->dBalance << std::endl;
+        fout << current->data->email << std::endl;
+        fout << current->data->address << std::endl;
         current = current->next;
     }
-    cout << "Данные успешно сохранены в файл." << endl;
+
+    std::cout << "Данные успешно сохранены в файл." << std::endl;
 }
 
-// Функция загрузки данных из файла
 void load_DB(Stack *stack, const char *filename)
 {
-    ifstream inFile(filename);
-    if (!inFile)
+    std::ifstream fin(filename);
+
+    if (!fin.is_open())
     {
-        cerr << "Ошибка открытия файла для чтения." << endl;
+        std::cout << "Ошибка открытия файла для чтения" << std::endl;
         return;
     }
 
-    clear(stack);
-
-    Bank_Client *client = nullptr;
-    char buffer[1000];
-    while (inFile.getline(buffer, 1000))
+    std::string line;
+    while (std::getline(fin, line))
     {
-        if (strncmp(buffer, "Login: ", 7) == 0)
-        {
-            client = new Bank_Client;
-            client->login = (char *)malloc((strlen(buffer + 7) + 1) * sizeof(char));
-            strcpy(client->login, buffer + 7);
-        }
-        else if (strncmp(buffer, "Password: ", 10) == 0)
-        {
-            client->password = (char *)malloc((strlen(buffer + 10) + 1) * sizeof(char));
-            strcpy(client->password, buffer + 10);
-        }
-        else if (strncmp(buffer, "Balance: ", 9) == 0)
-        {
-            client->dBalance = atof(buffer + 9);
-        }
-        else if (strncmp(buffer, "Email: ", 7) == 0)
-        {
-            client->email = (char *)malloc((strlen(buffer + 7) + 1) * sizeof(char));
-            strcpy(client->email, buffer + 7);
-        }
-        else if (strncmp(buffer, "Address: ", 9) == 0)
-        {
-            client->address = (char *)malloc((strlen(buffer + 9) + 1) * sizeof(char));
-            strcpy(client->address, buffer + 9);
-            push(stack, client);
-        }
+        Bank_Client *client = new Bank_Client;
+        client->login = strdup(line.c_str());
+        std::getline(fin, line);
+        client->password = strdup(line.c_str());
+        std::getline(fin, line);
+        client->dBalance = std::stoi(line);
+        std::getline(fin, line);
+        client->email = strdup(line.c_str());
+        std::getline(fin, line);
+        client->address = strdup(line.c_str());
+        push(stack, client);
     }
-    cout << "Данные успешно загружены из файла." << endl;
+
+    fin.close();
+    std::cout << "Данные успешно загружены из файла" << std::endl;
 }
 
 ofstream new_DB(const char *filename)
@@ -94,9 +82,9 @@ ofstream new_DB(const char *filename)
     ofstream outFile(filename);
     if (!outFile)
     {
-        cerr << "Ошибка открытия файла для записи." << endl;
+        cout << "Ошибка открытия файла для записи" << endl;
         return ofstream();
     }
-    cout << "Новый файл базы данных успешно создан." << endl;
+    cout << "Новый файл базы данных успешно создан " << endl;
     return outFile;
 }

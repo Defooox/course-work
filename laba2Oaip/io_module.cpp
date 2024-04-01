@@ -89,13 +89,16 @@ void printData(Bank_Client *client)
 
 void DataInTable(Bank_Client *client)
 {
-    cout << "------------------------------------------------------------------------" << endl;
-    cout << left << setw(20) << "Login" << setw(20) << "Password" << setw(15) << "Balance" << setw(30) << "Email"
-         << setw(30) << "Address" << endl;
-    cout << "------------------------------------------------------------------------" << endl;
-    cout << left << setw(20) << client->login << setw(20) << client->password << fixed << setprecision(2) << setw(15)
-         << client->dBalance << setw(30) << client->email << setw(30) << client->address << endl;
-    cout << "------------------------------------------------------------------------" << endl;
+    cout << "|" << setw(15) << "Login"
+         << " | " << setw(10) << "Баланс"
+         << " | " << setw(15) << "Адрес"
+         << " | " << setw(20) << "Email"
+         << " | " << setw(15) << "Password"
+         << " |" << endl;
+
+    cout << "|" << setw(15) << client->login << " | " << setw(10) << client->dBalance << " | " << setw(15)
+         << client->address << " | " << setw(20) << client->email << " | " << setw(15) << client->password << " |"
+         << endl;
 }
 
 void Show(Stack *stack)
@@ -106,13 +109,12 @@ void Show(Stack *stack)
     }
     else
     {
-        Node *current = stack->top;
-        cout << "Elements of Stack: " << endl;
-        while (current != nullptr)
+        Node* current = stack->top;
+        while (current->next != nullptr)
         {
-            cout << current->data << " ";
+            DataInTable(current->data);
             current = current->next;
         }
-        cout << endl;
+  
     }
 }
