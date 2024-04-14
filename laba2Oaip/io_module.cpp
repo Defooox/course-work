@@ -89,17 +89,12 @@ void printData(Bank_Client *client)
 
 void DataInTable(Bank_Client *client)
 {
-    cout << "|" << setw(15) << "Login"
-         << " | " << setw(10) << "Баланс"
-         << " | " << setw(15) << "Адрес"
-         << " | " << setw(20) << "Email"
-         << " | " << setw(15) << "Password"
-         << " |" << endl;
 
     cout << "|" << setw(15) << client->login << " | " << setw(10) << client->dBalance << " | " << setw(15)
          << client->address << " | " << setw(20) << client->email << " | " << setw(15) << client->password << " |"
          << endl;
 }
+
 
 void Show(Stack *stack)
 {
@@ -109,12 +104,11 @@ void Show(Stack *stack)
     }
     else
     {
-        Node* current = stack->top;
-        while (current->next != nullptr)
+        Node *current = stack->top;
+        while (current != nullptr)
         {
             DataInTable(current->data);
             current = current->next;
         }
-  
     }
 }

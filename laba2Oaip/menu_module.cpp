@@ -1,6 +1,8 @@
 #include "menu_module.h"
 #include "io_module.h"
+#include "stack_module.h"
 
+#include <iomanip>
 #include <iostream>
 
 using namespace std;
@@ -17,9 +19,10 @@ void displayMenu(Stack *stack)
         cout << "4. Сохранить данные в файл" << endl;
         cout << "5. Загрузить данные из файла" << endl;
         cout << "6. Удалить файл базы данных" << endl;
+        cout << "7. Отсортиворать данные" << endl;
+        cout << "8. Поиск клиента" << endl;
         cout << "0. Выход" << endl;
         cout << "Выберите действие: ";
-
 
         while (!(cin >> choice))
         {
@@ -28,7 +31,6 @@ void displayMenu(Stack *stack)
             cout << "Ошибка: введите числовое значение" << endl;
             cout << "Выберите действие: ";
         }
-
 
         switch (choice)
         {
@@ -63,8 +65,18 @@ void displayMenu(Stack *stack)
         }
         case 3: {
             if (!isEmpty(stack))
-            {    
+            {
                 cout << "Данные клиентов в табличном формате:" << endl;
+                cout << "------------------------------------------------------------------------------------------"
+                     << endl;
+                cout << "|" << setw(15) << "Login"
+                     << " | " << setw(10) << "Баланс"
+                     << " | " << setw(15) << "Адрес"
+                     << " | " << setw(20) << "Email"
+                     << " | " << setw(15) << "Password"
+                     << " |" << endl;
+                cout << "------------------------------------------------------------------------------------------"
+                     << endl;
 
                 Show(stack);
             }
@@ -86,6 +98,67 @@ void displayMenu(Stack *stack)
             remove_DB("database.txt");
             break;
         }
+        case 7: {
+
+            int ascending;
+            int fieldChoice;
+            cout << "Выберите поле для сортировки:" << endl;
+            cout << "1. Login" << endl;
+            cout << "2. Email" << endl;
+            cout << "3. Баланс" << endl;
+            cout << "4. Пароль" << endl;
+            cout << "5. Адрес" << endl;
+            cout << "Выберите поле: ";
+            cin >> fieldChoice;
+
+            cout << "Выберите направление сортировки:" << endl;
+            cout << "1. По возрастанию" << endl;
+            cout << "2. По убыванию" << endl;
+            cout << "Выберите направление: ";
+            cin >> ascending;
+
+            quickSort(stack, fieldChoice, ascending);
+
+            cout << "Данные отсортированы" << endl;
+            cout << "------------------------------------------------------------------------------------------"
+                 << endl;
+            cout << "|" << setw(15) << "Login"
+                 << " | " << setw(10) << "Баланс"
+                 << " | " << setw(15) << "Адрес"
+                 << " | " << setw(20) << "Email"
+                 << " | " << setw(15) << "Password"
+                 << " |" << endl;
+            cout << "------------------------------------------------------------------------------------------"
+                 << endl;
+
+            Show(stack);
+        }
+
+       case 8: { 
+            if (!isEmpty(stack))
+            {
+                int fieldChoice;
+                cout << "Выберите поле для поиска:" << endl;
+                cout << "1. Login" << endl;
+                cout << "2. Адрес" << endl;
+                cout << "Выберите поле: ";
+                cin >> fieldChoice;
+
+                char searchValue[256];
+                cout << "Введите значение для поиска: ";
+                cin.ignore(); 
+                cin.getline(searchValue, 256);
+
+             
+                findAllClients(stack, searchValue, fieldChoice);
+            }
+            else
+            {
+                cout << "Стек пуст" << endl;
+            }
+            break;
+        }
+
         case 0:
             cout << "Выход" << endl;
             break;
