@@ -66,100 +66,68 @@ void clear(Stack *stack)
     }
 }
 
-Node *findMiddle(Node *low, Node *high)
+void sortStack(Stack *stack, int fieldChoice, int ascending)
 {
-    if (low == nullptr)
+    Stack tempStack;
+    tempStack.top = nullptr;
+
+    while (!isEmpty(stack))
     {
-        return nullptr;
-    }
+        Bank_Client *topClient = stack->top->data;
+        pop(stack);
 
-    Node *slow = low;
-    Node *fast = low;
-
-    while (fast != high && fast->next != high)
-    {
-        slow = slow->next;
-        fast = fast->next->next;
-    }
-
-    return slow;
-}
-
-
-
-Node *partition(Node *low, Node *high, int fieldIndex, bool ascending)
-{
-    // Найдите средний узел между low и high
-    Node *middleNode = findMiddle(low, high);
-    Bank_Client *warp = middleNode->data;
-
-    // Используем i = low вместо i = low->next
-    Node *i = low;
-
-    for (Node *j = low; j != high; j = j->next)
-    {
-        int cmpResult;
-        switch (fieldIndex)
+        if (ascending == 1)
         {
-        case 1:
-            cmpResult = strcmp(j->data->login, warp->login);
-            break;
-        case 2:
-            cmpResult = strcmp(j->data->password, warp->password);
-            break;
-        case 3:
-            cmpResult = (j->data->dBalance < warp->dBalance) ? -1 : ((j->data->dBalance > warp->dBalance) ? 1 : 0);
-            break;
-        case 4:
-            cmpResult = strcmp(j->data->address, warp->address);
-            break;
-        case 5:
-            cmpResult = strcmp(j->data->email, warp->email);
-            break;
-        default:
-            return nullptr;
+
+            while (!isEmpty(&tempStack) && compareClients(tempStack.top->data, topClient, fieldChoice) > 0)
+            {
+
+                push(stack, tempStack.top->data);
+                pop(&tempStack);
+            }
+        }
+        else
+        {
+
+            while (!isEmpty(&tempStack) && compareClients(tempStack.top->data, topClient, fieldChoice) < 0)
+            {
+
+                push(stack, tempStack.top->data);
+                pop(&tempStack);
+            }
         }
 
-        if ((ascending && cmpResult < 0) || (!ascending && cmpResult > 0))
-        {
-            // Переключение данных между i и j
-            Bank_Client *temp = i->data;
-            i->data = j->data;
-            j->data = temp;
-            // Смещение указателя i на следующий узел
-            i = i->next;
-        }
+        push(&tempStack, topClient);
     }
 
-    // Меняем данные узлов i и high
-    Bank_Client *temp = i->data;
-    i->data = high->data;
-    high->data = temp;
-
-    return i;
-}
-
-
-void quickSortUtil(Node *low, Node *high, int fieldIndex, bool ascending)
-{
-    if (low != nullptr && high != nullptr && low != high && low != high->next)
+    while (!isEmpty(&tempStack))
     {
-
-        Node *pi = partition(low, high, fieldIndex, ascending);
-
-        quickSortUtil(low, pi->next, fieldIndex, ascending);
-        quickSortUtil(pi->next, high, fieldIndex, ascending);
+        push(stack, tempStack.top->data);
+        pop(&tempStack);
     }
 }
 
-void quickSort(Stack *stack, int fieldIndex, bool ascending)
+int compareClients(Bank_Client *a, Bank_Client *b, int fieldChoice)
 {
-
-    Node *high = stack->top;
-    while (high->next != nullptr)
-        high = high->next;
-
-    quickSortUtil(stack->top, high, fieldIndex, ascending);
+    switch (fieldChoice)
+    {
+    case 1:
+        return strcmp(a->login, b->login);
+    case 2:
+        return strcmp(a->email, b->email);
+    case 3:
+        if (a->dBalance < b->dBalance)
+            return -1;
+        if (a->dBalance > b->dBalance)
+            return 1;
+        return 0;
+    case 4:
+        return strcmp(a->password, b->password);
+    case 5:
+        return strcmp(a->address, b->address);
+    default:
+        return 0;
+    }
 }
 
 int getStackSize(Stack *stack)
@@ -174,8 +142,11 @@ int getStackSize(Stack *stack)
     return size;
 }
 
-int binarySearch(Stack *stack, char *searchValue, int fieldIndex)
+/* int binarySearch(Stack *stack, char *searchValue, int fieldIndex)
 {
+
+    sortStack(stack, fieldIndex, 1);
+
     int low = 0;
     int high = getStackSize(stack) - 1;
 
@@ -192,8 +163,8 @@ int binarySearch(Stack *stack, char *searchValue, int fieldIndex)
             case 1:
                 cmpResult = strcmp(midClient->login, searchValue);
                 break;
-            case 4:
-                cmpResult = strcmp(midClient->address, searchValue);
+            case 2:
+                cmpResult = strcmp(midClient->email, searchValue);
                 break;
             default:
                 return -1;
@@ -219,41 +190,65 @@ int binarySearch(Stack *stack, char *searchValue, int fieldIndex)
     }
 
     return -1;
-}
+}*/
 
 void findAllClients(Stack *stack, char *searchValue, int fieldIndex)
 {
+    if (searchValue == nullptr || *searchValue == '\0')
+    {
+        cout << "Ошибка: Невалидное значение для поиска" << endl;
+        return;
+    }
 
+    if (fieldIndex < 1 || fieldIndex > 2)
+    {
+        cout << "Ошибка: Невалидный индекс поля" << endl;
+        return;
+    }
+
+    int stackSize = getStackSize(stack);
     bool foundMatchingClients = false;
 
-    cout << "Клиенты с одинаковым значением: " << endl;
-
-    Node *currentNode = stack->top;
-    while (currentNode != nullptr)
+    for (int index = 0; index < stackSize; ++index)
     {
-        Bank_Client *client = currentNode->data;
-
-        int cmpResult = 0;
-        if (fieldIndex == 1)
+        Bank_Client *client = GetClientIndex(stack, index);
+        if (client == nullptr)
         {
-            cmpResult = strcmp(client->login, searchValue);
-        }
-        else if (fieldIndex == 4)
-        {
-            cmpResult = strcmp(client->address, searchValue);
+            cout << "Ошибка: Не удалось получить клиента с индексом " << index << endl;
+            continue;
         }
 
-        if (cmpResult == 0)
+        const char *fieldToSearch = nullptr;
+        switch (fieldIndex)
+        {
+        case 1:
+            fieldToSearch = client->login;
+            break;
+        case 2:
+            fieldToSearch = client->email;
+            break;
+        case 3:
+            fieldToSearch = client->password;
+        case 4:
+            fieldToSearch = client->address;
+        default:
+            cout << "Ошибка: Невалидный индекс поля" << endl;
+            return;
+        }
+
+        if (strcmp(fieldToSearch, searchValue) == 0)
         {
             printData(client);
             foundMatchingClients = true;
         }
-
-        currentNode = currentNode->next;
+        else if (strcmp(fieldToSearch, searchValue) > 0)
+        {
+            break;
+        }
     }
 
     if (!foundMatchingClients)
     {
-        cout << "Клиентов с таким значением не найдено" << endl;
+        cout << "Совпадений не найдено" << endl;
     }
 }

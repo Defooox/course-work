@@ -47,7 +47,6 @@ void readData(Bank_Client &client)
         readData(client);
         return;
     }
-
     char clientAddress[100];
     cout << "Введите адрес: ";
     cin.ignore();
@@ -95,12 +94,11 @@ void DataInTable(Bank_Client *client)
          << endl;
 }
 
-
 void Show(Stack *stack)
 {
     if (isEmpty(stack))
     {
-        cout << "stack is empty" << endl;
+        cout << "стек пуст" << endl;
     }
     else
     {
@@ -109,6 +107,44 @@ void Show(Stack *stack)
         {
             DataInTable(current->data);
             current = current->next;
+        }
+    }
+}
+
+int getIntInput()
+{
+    int input;
+    while (true)
+    {
+        std::cin >> input;
+        if (std::cin.fail())
+        {
+            std::cout << "Ошибка: Некорректный ввод. Пожалуйста, введите число." << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+        else
+        {
+            return input;
+        }
+    }
+}
+
+char getCharInput()
+{
+    char input;
+    while (true)
+    {
+        std::cin >> input;
+        if (std::cin.fail())
+        {
+            std::cout << "Ошибка: Некорректный ввод. Пожалуйста, введите символ." << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+        else
+        {
+            return input;
         }
     }
 }

@@ -99,25 +99,48 @@ void displayMenu(Stack *stack)
             break;
         }
         case 7: {
-
+            if (isEmpty(stack))
+            {
+                Show(stack);
+                break;
+            }
             int ascending;
             int fieldChoice;
-            cout << "Выберите поле для сортировки:" << endl;
-            cout << "1. Login" << endl;
-            cout << "2. Email" << endl;
-            cout << "3. Баланс" << endl;
-            cout << "4. Пароль" << endl;
-            cout << "5. Адрес" << endl;
-            cout << "Выберите поле: ";
-            cin >> fieldChoice;
+            do
+            {
+                cout << "Выберите поле для сортировки:" << endl;
+                cout << "1. Login" << endl;
+                cout << "2. Email" << endl;
+                cout << "3. Баланс" << endl;
+                cout << "4. Пароль" << endl;
+                cout << "5. Адрес" << endl;
+                cout << "Выберите поле: ";
+                fieldChoice = getIntInput();
 
-            cout << "Выберите направление сортировки:" << endl;
-            cout << "1. По возрастанию" << endl;
-            cout << "2. По убыванию" << endl;
-            cout << "Выберите направление: ";
-            cin >> ascending;
+                if (fieldChoice < 1 || fieldChoice > 5)
+                {
+                    cout << "Ошибка: Невалидный выбор поля" << endl;
+                }
+            } while (fieldChoice < 1 || fieldChoice > 5);
 
-            quickSort(stack, fieldChoice, ascending);
+            do
+            {
+
+                cout << "Выберите направление сортировки:" << endl;
+                cout << "1. По возрастанию" << endl;
+                cout << "2. По убыванию" << endl;
+                cout << "Выберите направление: ";
+                ascending = getIntInput();
+
+                if (ascending != 1 && ascending != 2)
+                {
+                    cout << "Ошибка: Некорректный ввод" << endl;
+                    continue;
+                }
+
+            } while (ascending != 1 && ascending != 2);
+
+            sortStack(stack, fieldChoice, ascending);
 
             cout << "Данные отсортированы" << endl;
             cout << "------------------------------------------------------------------------------------------"
@@ -132,30 +155,39 @@ void displayMenu(Stack *stack)
                  << endl;
 
             Show(stack);
+            break;
         }
 
-       case 8: { 
+        case 8: {
             if (!isEmpty(stack))
             {
+
                 int fieldChoice;
-                cout << "Выберите поле для поиска:" << endl;
-                cout << "1. Login" << endl;
-                cout << "2. Адрес" << endl;
-                cout << "Выберите поле: ";
-                cin >> fieldChoice;
+                do
+                {
+
+                    cout << "Выберите поле для поиска:" << endl;
+                    cout << "1. Login" << endl;
+                    cout << "2. Email" << endl;
+                    cout << "3. Пароль" << endl;
+                    cout << "4. Адрес" << endl;
+                    cout << "Выберите поле: ";
+                    fieldChoice = getIntInput();
+
+                } while (fieldChoice < 1 || fieldChoice > 5);
 
                 char searchValue[256];
                 cout << "Введите значение для поиска: ";
-                cin.ignore(); 
+                cin.ignore();
                 cin.getline(searchValue, 256);
 
-             
                 findAllClients(stack, searchValue, fieldChoice);
             }
             else
             {
                 cout << "Стек пуст" << endl;
             }
+
             break;
         }
 
