@@ -9,6 +9,7 @@ using namespace std;
 
 void displayMenu(Stack *stack)
 {
+    load_DB(stack, "database.txt");
     int choice;
     do
     {

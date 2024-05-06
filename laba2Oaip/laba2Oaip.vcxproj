@@ -130,7 +130,7 @@
   <ItemGroup>
     <ClCompile Include="file_module.cpp" />
     <ClCompile Include="io_module.cpp" />
-    <ClCompile Include="laba2Oaip.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="menu_module.cpp" />
     <ClCompile Include="stack_module.cpp" />
   </ItemGroup>

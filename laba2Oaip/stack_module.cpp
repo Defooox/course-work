@@ -142,56 +142,6 @@ int getStackSize(Stack *stack)
     return size;
 }
 
-/* int binarySearch(Stack *stack, char *searchValue, int fieldIndex)
-{
-
-    sortStack(stack, fieldIndex, 1);
-
-    int low = 0;
-    int high = getStackSize(stack) - 1;
-
-    while (low <= high)
-    {
-        int mid = low + (high - low) / 2;
-        Bank_Client *midClient = GetClientIndex(stack, mid);
-
-        if (midClient != nullptr)
-        {
-            int cmpResult = 0;
-            switch (fieldIndex)
-            {
-            case 1:
-                cmpResult = strcmp(midClient->login, searchValue);
-                break;
-            case 2:
-                cmpResult = strcmp(midClient->email, searchValue);
-                break;
-            default:
-                return -1;
-            }
-
-            if (cmpResult == 0)
-            {
-                return mid;
-            }
-            else if (cmpResult < 0)
-            {
-                low = mid + 1;
-            }
-            else
-            {
-                high = mid - 1;
-            }
-        }
-        else
-        {
-            return -1;
-        }
-    }
-
-    return -1;
-}*/
-
 void findAllClients(Stack *stack, char *searchValue, int fieldIndex)
 {
     if (searchValue == nullptr || *searchValue == '\0')

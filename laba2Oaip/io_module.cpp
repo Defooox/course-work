@@ -20,7 +20,7 @@ void readData(Bank_Client &client)
         readData(client);
         return;
     }
-    client.login = (char *)malloc((strlen(clientLogin) + 1) * sizeof(char));
+    client.login = new char[strlen(clientLogin) + 1];
     strcpy(client.login, clientLogin);
 
     char clientPass[50];
@@ -34,7 +34,7 @@ void readData(Bank_Client &client)
         readData(client);
         return;
     }
-    client.password = (char *)malloc((strlen(clientPass) + 1) * sizeof(char));
+    client.password = new char[strlen(clientPass) + 1];
     strcpy(client.password, clientPass);
 
     cout << "¬ведите сумму на счЄте: ";
@@ -59,7 +59,7 @@ void readData(Bank_Client &client)
         readData(client);
         return;
     }
-    client.address = (char *)malloc((strlen(clientAddress) + 1) * sizeof(char));
+    client.address = new char[strlen(clientAddress) + 1];
     strcpy(client.address, clientAddress);
 
     char clientEmail[100];
@@ -73,7 +73,7 @@ void readData(Bank_Client &client)
         readData(client);
         return;
     }
-    client.email = (char *)malloc((strlen(clientEmail) + 1) * sizeof(char));
+    client.email = new char[strlen(clientEmail) + 1];
     strcpy(client.email, clientEmail);
 }
 
@@ -88,7 +88,6 @@ void printData(Bank_Client *client)
 
 void DataInTable(Bank_Client *client)
 {
-
     cout << "|" << setw(15) << client->login << " | " << setw(10) << client->dBalance << " | " << setw(15)
          << client->address << " | " << setw(20) << client->email << " | " << setw(15) << client->password << " |"
          << endl;
