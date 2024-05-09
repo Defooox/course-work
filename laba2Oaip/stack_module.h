@@ -30,6 +30,8 @@ struct Stack
 bool isEmpty(Stack *stack);
 void push(Stack *stack, Bank_Client *data);
 void pop(Stack *stack);
+
+void deleteClient(Stack *stack, int index);
 Bank_Client *GetClientIndex(Stack *stack, int index);
 void clear(Stack *stack);
 

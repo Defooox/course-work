@@ -6,9 +6,11 @@
 #include <iostream>
 #include <limits>
 
+bool isDigit(const char *str);
+
 void readData(Bank_Client &client);
 void printData(Bank_Client *client);
-void DataInTable(Bank_Client *client);
+void printClient(Bank_Client *client);
 void Show(Stack *stack);
 
 int getIntInput();

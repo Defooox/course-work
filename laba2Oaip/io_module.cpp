@@ -1,10 +1,22 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iomanip>
 #include <iostream>
+#include <string>
 
 #include "io_module.h"
 
 using namespace std;
+
+bool isDigit(const char *str)
+{
+    while (*str)
+    {
+        if (!isdigit(*str))
+            return false;
+        ++str;
+    }
+    return true;
+}
 
 void readData(Bank_Client &client)
 {
@@ -38,18 +50,26 @@ void readData(Bank_Client &client)
     strcpy(client.password, clientPass);
 
     cout << "Введите сумму на счёте: ";
-    cin >> client.dBalance;
-    if (cin.fail())
+    string balanceInput;
+    while (true)
     {
-        cout << "Ошибка ввода" << endl;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        readData(client);
-        return;
+        getline(cin, balanceInput);
+        if (balanceInput.empty())
+        {
+            cout << "Ошибка ввода. Повторите ввод: ";
+            continue;
+        }
+        if (!isDigit(balanceInput.c_str()))
+        {
+            cout << "Ошибка ввода. Введите только цифры: ";
+            continue;
+        }
+        break;
     }
+    client.dBalance = stod(balanceInput); // Преобразовываем строку в double
+
     char clientAddress[100];
     cout << "Введите адрес: ";
-    cin.ignore();
     cin.getline(clientAddress, 100);
     if (cin.fail())
     {
@@ -86,27 +106,61 @@ void printData(Bank_Client *client)
     cout << "Password: " << client->password << endl;
 }
 
-void DataInTable(Bank_Client *client)
+void printClient(Bank_Client *client, int maxLoginLength, int maxBalanceLength, int maxAddressLength,
+                 int maxEmailLength, int maxPasswordLength)
 {
-    cout << "|" << setw(15) << client->login << " | " << setw(10) << client->dBalance << " | " << setw(15)
-         << client->address << " | " << setw(20) << client->email << " | " << setw(15) << client->password << " |"
-         << endl;
+    cout << "| " << right << setw(maxLoginLength) << client->login << " | " << setw(maxBalanceLength)
+         << client->dBalance << " | " << setw(maxAddressLength) << client->address << " | " << setw(maxEmailLength)
+         << client->email << " | " << setw(maxPasswordLength) << client->password << " |\n";
 }
 
 void Show(Stack *stack)
 {
     if (isEmpty(stack))
     {
-        cout << "стек пуст" << endl;
+        cout << "Стек пуст" << endl;
     }
     else
     {
+        int maxLoginLength = 15, maxBalanceLength = 15, maxAddressLength = 15, maxEmailLength = 15,
+            maxPasswordLength = 15;
+
         Node *current = stack->top;
         while (current != nullptr)
         {
-            DataInTable(current->data);
+            maxLoginLength = std::max(maxLoginLength, static_cast<int>(strlen(current->data->login)));
+            maxBalanceLength =
+                std::max(maxBalanceLength, static_cast<int>(std::to_string(current->data->dBalance).length()));
+            maxAddressLength = std::max(maxAddressLength, static_cast<int>(strlen(current->data->address)));
+            maxEmailLength = std::max(maxEmailLength, static_cast<int>(strlen(current->data->email)));
+            maxPasswordLength = std::max(maxPasswordLength, static_cast<int>(strlen(current->data->password)));
             current = current->next;
         }
+
+        cout << "+-" << string(maxLoginLength, '-') << "-+-" << string(maxBalanceLength, '-') << "-+-"
+             << string(maxAddressLength, '-') << "-+-" << string(maxEmailLength, '-') << "-+-"
+             << string(maxPasswordLength, '-') << "-+\n";
+        cout << "| " << right << setw(maxLoginLength) << "Логин"
+             << " | " << setw(maxBalanceLength) << "Баланс"
+             << " | " << setw(maxAddressLength) << "Адрес"
+             << " | " << setw(maxEmailLength) << "Эл. почта"
+             << " | " << setw(maxPasswordLength) << "Пароль"
+             << " |\n";
+        cout << "+-" << string(maxLoginLength, '-') << "-+-" << string(maxBalanceLength, '-') << "-+-"
+             << string(maxAddressLength, '-') << "-+-" << string(maxEmailLength, '-') << "-+-"
+             << string(maxPasswordLength, '-') << "-+\n";
+
+        current = stack->top;
+        while (current != nullptr)
+        {
+            printClient(current->data, maxLoginLength, maxBalanceLength, maxAddressLength, maxEmailLength,
+                        maxPasswordLength);
+            current = current->next;
+        }
+
+        cout << "+-" << string(maxLoginLength, '-') << "-+-" << string(maxBalanceLength, '-') << "-+-"
+             << string(maxAddressLength, '-') << "-+-" << string(maxEmailLength, '-') << "-+-"
+             << string(maxPasswordLength, '-') << "-+\n";
     }
 }
 

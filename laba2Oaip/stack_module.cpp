@@ -5,6 +5,8 @@
 
 using namespace std;
 
+int getStackSize(Stack *stack);
+
 bool isEmpty(Stack *stack)
 {
     return stack->top == nullptr;
@@ -30,6 +32,36 @@ void pop(Stack *stack)
         cout << "Стек пуст" << endl;
     }
 }
+void deleteClient(Stack *stack, int index)
+{
+    int stackSize = getStackSize(stack);
+    if (index < 0 || index >= stackSize)
+    {
+        cout << "Ошибка: неверный индекс" << endl;
+        return;
+    }
+
+    Node *current = stack->top;
+    Node *prev = nullptr;
+    for (int i = 0; i < index; i++)
+    {
+        prev = current;
+        current = current->next;
+    }
+
+    if (prev == nullptr)
+    {
+        stack->top = current->next;
+    }
+    else
+    {
+        prev->next = current->next;
+    }
+
+    delete current;
+    cout << "Клиент удален" << endl;
+}
+
 
 Bank_Client *GetClientIndex(Stack *stack, int index)
 {
