@@ -216,6 +216,7 @@ void updateClient(Stack *stack, int index, const Bank_Client &newClientData)
 
 void findAllClients(Stack *stack, char *searchValue, int fieldIndex)
 {
+    sortStack(stack, fieldIndex, 1);
     if (searchValue == nullptr || *searchValue == '\0')
     {
         cout << "Ошибка: Невалидное значение для поиска" << endl;

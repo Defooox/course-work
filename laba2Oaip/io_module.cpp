@@ -21,10 +21,10 @@ bool isDigit(const char *str)
 void readData(Bank_Client &client)
 {
     char clientLogin[100];
-    cout << "Введите login: ";
     cin.ignore();
+    cout << "Введите login: ";
     cin.getline(clientLogin, 100);
-    if (cin.fail())
+    if (cin.fail() || strlen(clientLogin) == 0)
     {
         cout << "Ошибка ввода" << endl;
         cin.clear();
@@ -38,7 +38,7 @@ void readData(Bank_Client &client)
     char clientPass[50];
     cout << "Введите пароль: ";
     cin.getline(clientPass, 50);
-    if (cin.fail())
+    if (cin.fail() || strlen(clientPass) == 0)
     {
         cout << "Ошибка ввода" << endl;
         cin.clear();
@@ -66,12 +66,12 @@ void readData(Bank_Client &client)
         }
         break;
     }
-    client.dBalance = stod(balanceInput); // Преобразовываем строку в double
+    client.dBalance = stod(balanceInput);
 
     char clientAddress[100];
     cout << "Введите адрес: ";
     cin.getline(clientAddress, 100);
-    if (cin.fail())
+    if (cin.fail() || strlen(clientAddress) == 0)
     {
         cout << "Ошибка ввода" << endl;
         cin.clear();
@@ -85,7 +85,7 @@ void readData(Bank_Client &client)
     char clientEmail[100];
     cout << "Введите email: ";
     cin >> clientEmail;
-    if (cin.fail())
+    if (cin.fail() || strlen(clientEmail) == 0)
     {
         cout << "Ошибка ввода" << endl;
         cin.clear();
@@ -126,6 +126,8 @@ void Show(Stack *stack)
             maxPasswordLength = 15;
 
         Node *current = stack->top;
+
+       
         while (current != nullptr)
         {
             maxLoginLength = std::max(maxLoginLength, static_cast<int>(strlen(current->data->login)));
@@ -137,32 +139,40 @@ void Show(Stack *stack)
             current = current->next;
         }
 
-        cout << "+-" << string(maxLoginLength, '-') << "-+-" << string(maxBalanceLength, '-') << "-+-"
-             << string(maxAddressLength, '-') << "-+-" << string(maxEmailLength, '-') << "-+-"
+        current = stack->top;
+
+      
+        cout << "+-" << string(4, '-') << "-+-" << string(maxLoginLength, '-') << "-+-" << string(maxBalanceLength, '-')
+             << "-+-" << string(maxAddressLength, '-') << "-+-" << string(maxEmailLength, '-') << "-+-"
              << string(maxPasswordLength, '-') << "-+\n";
-        cout << "| " << right << setw(maxLoginLength) << "Логин"
+        cout << "| " << right << setw(4) << "N"
+             << " | " << setw(maxLoginLength) << "Логин"
              << " | " << setw(maxBalanceLength) << "Баланс"
              << " | " << setw(maxAddressLength) << "Адрес"
              << " | " << setw(maxEmailLength) << "Эл. почта"
              << " | " << setw(maxPasswordLength) << "Пароль"
              << " |\n";
-        cout << "+-" << string(maxLoginLength, '-') << "-+-" << string(maxBalanceLength, '-') << "-+-"
-             << string(maxAddressLength, '-') << "-+-" << string(maxEmailLength, '-') << "-+-"
+        cout << "+-" << string(4, '-') << "-+-" << string(maxLoginLength, '-') << "-+-" << string(maxBalanceLength, '-')
+             << "-+-" << string(maxAddressLength, '-') << "-+-" << string(maxEmailLength, '-') << "-+-"
              << string(maxPasswordLength, '-') << "-+\n";
 
-        current = stack->top;
+     
+        int rowNum = 0;
         while (current != nullptr)
         {
+            cout << "| " << right << setw(4) << rowNum << " ";
             printClient(current->data, maxLoginLength, maxBalanceLength, maxAddressLength, maxEmailLength,
                         maxPasswordLength);
             current = current->next;
+            rowNum++;
         }
 
-        cout << "+-" << string(maxLoginLength, '-') << "-+-" << string(maxBalanceLength, '-') << "-+-"
-             << string(maxAddressLength, '-') << "-+-" << string(maxEmailLength, '-') << "-+-"
+        cout << "+-" << string(4, '-') << "-+-" << string(maxLoginLength, '-') << "-+-" << string(maxBalanceLength, '-')
+             << "-+-" << string(maxAddressLength, '-') << "-+-" << string(maxEmailLength, '-') << "-+-"
              << string(maxPasswordLength, '-') << "-+\n";
     }
 }
+
 
 int getIntInput()
 {
