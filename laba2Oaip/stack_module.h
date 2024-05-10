@@ -32,6 +32,8 @@ void push(Stack *stack, Bank_Client *data);
 void pop(Stack *stack);
 
 void deleteClient(Stack *stack, int index);
+void updateClient(Stack *stack, int index, const Bank_Client &newClientData);
+
 Bank_Client *GetClientIndex(Stack *stack, int index);
 void clear(Stack *stack);
 

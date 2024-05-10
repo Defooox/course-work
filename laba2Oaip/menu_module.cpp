@@ -24,6 +24,7 @@ void displayMenu(Stack *stack)
         cout << "| 7. Отсортиворать данные                                                      |" << endl;
         cout << "| 8. Поиск клиента                                                             |" << endl;
         cout << "| 9. Удалить клиента по индексу                                                |" << endl;
+        cout << "| 10. Изменить данные клиента                                                  |" << endl;
         cout << "| 0. Выход                                                                     |" << endl;
         cout << "-------------------------------------------------------------------------------/" << endl;
         cout << "Выберите действие: ";
@@ -135,16 +136,7 @@ void displayMenu(Stack *stack)
             sortStack(stack, fieldChoice, ascending);
 
             cout << "Данные отсортированы" << endl;
-            cout << "------------------------------------------------------------------------------------------"
-                 << endl;
-            cout << "|" << setw(15) << "Login"
-                 << " | " << setw(10) << "Баланс"
-                 << " | " << setw(15) << "Адрес"
-                 << " | " << setw(20) << "Email"
-                 << " | " << setw(15) << "Password"
-                 << " |" << endl;
-            cout << "------------------------------------------------------------------------------------------"
-                 << endl;
+            
 
             Show(stack);
             break;
@@ -197,6 +189,24 @@ void displayMenu(Stack *stack)
             }
             break;
         }
+
+             case 10: { // Добавляем новый пункт 10 для обновления клиента
+            if (!isEmpty(stack))
+            {
+                int index;
+                cout << "Введите номер клиента для обновления: ";
+                cin >> index;
+                Bank_Client newClientData;
+                readData(newClientData);
+                updateClient(stack, index, newClientData);
+            }
+            else
+            {
+                cout << "Стек пуст" << endl;
+            }
+            break;
+        }
+
 
         case 0:
             cout << "Выход" << endl;

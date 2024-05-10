@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "stack_module.h"
 #include "io_module.h"
 
@@ -173,6 +175,44 @@ int getStackSize(Stack *stack)
     }
     return size;
 }
+
+void updateClient(Stack *stack, int index, const Bank_Client &newClientData)
+{
+    int stackSize = getStackSize(stack);
+    if (index < 0 || index >= stackSize)
+    {
+        cout << "Ошибка: неверный индекс" << endl;
+        return;
+    }
+
+    Node *current = stack->top;
+    for (int i = 0; i < index; i++)
+    {
+        current = current->next;
+    }
+
+    free(current->data->address);
+    free(current->data->email);
+    free(current->data->login);
+    free(current->data->password);
+
+    current->data->login = new char[strlen(newClientData.login) + 1];
+    strcpy(current->data->login, newClientData.login);
+
+    current->data->password = new char[strlen(newClientData.password) + 1];
+    strcpy(current->data->password, newClientData.password);
+
+    current->data->dBalance = newClientData.dBalance;
+
+    current->data->address = new char[strlen(newClientData.address) + 1];
+    strcpy(current->data->address, newClientData.address);
+    
+    current->data->email = new char[strlen(newClientData.email) + 1];
+    strcpy(current->data->email, newClientData.email);
+
+    cout << "Данные клиента обновлены" << endl;
+}
+
 
 void findAllClients(Stack *stack, char *searchValue, int fieldIndex)
 {
